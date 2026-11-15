@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS products (
   id            BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
   codigo        VARCHAR(50)  NOT NULL UNIQUE CHECK (char_length(codigo) >= 3),
   nombre        VARCHAR(100) NOT NULL,
+  descripcion_corta VARCHAR(100),
   descripcion   VARCHAR(500),
   categoria     VARCHAR(20)  NOT NULL
                 CHECK (categoria IN ('interior', 'exterior', 'macetas', 'sustratos', 'herramientas')),

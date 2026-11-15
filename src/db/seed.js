@@ -8,48 +8,56 @@ const productos = [
   {
     codigo: 'PL-001', nombre: 'Monstera Deliciosa', categoria: 'interior',
     precio: 18990, stock: 12, stockCritico: 3,
+    descripcionCorta: 'Planta de interior de hojas grandes y recortadas.',
     descripcion: 'La Monstera Deliciosa es una de las plantas de interior más populares por sus hojas grandes con recortes característicos. Prefiere luz indirecta y riego moderado, ideal para espacios luminosos sin sol directo.',
     imagen: '/img/monstera.jpg',
   },
   {
     codigo: 'PL-002', nombre: 'Potus Verde', categoria: 'interior',
     precio: 8990, stock: 20, stockCritico: 5,
+    descripcionCorta: 'Planta colgante de fácil cuidado, ideal para principiantes.',
     descripcion: 'El Potus es una planta trepadora o colgante muy resistente, perfecta para quienes recién comienzan en el mundo de las plantas. Tolera baja luminosidad y riego espaciado.',
     imagen: '/img/potus.jpg',
   },
   {
     codigo: 'PL-003', nombre: 'Calathea Orbifolia', categoria: 'interior',
     precio: 14990, stock: 3, stockCritico: 3,
+    descripcionCorta: 'Hojas redondeadas con líneas plateadas, apta para mascotas.',
     descripcion: 'La Calathea Orbifolia destaca por sus hojas redondeadas con vetas plateadas. Necesita humedad ambiental y luz indirecta. Es una planta no tóxica, apta para hogares con mascotas.',
     imagen: '/img/calathea.jpg',
   },
   {
     codigo: 'PL-004', nombre: 'Lavanda', categoria: 'exterior',
     precio: 6990, stock: 15, stockCritico: 4,
+    descripcionCorta: 'Arbusto aromático de exterior, ideal para jardines soleados.',
     descripcion: 'La lavanda es un arbusto perenne muy aromático, perfecto para jardines exteriores con buena exposición solar. Atrae polinizadores y requiere riego escaso una vez establecida.',
     imagen: '/img/lavanda.jpg',
   },
   {
     codigo: 'PL-005', nombre: 'Suculenta Echeveria', categoria: 'exterior',
     precio: 4990, stock: 30, stockCritico: 8,
+    descripcionCorta: 'Suculenta de bajo mantenimiento, ideal para principiantes.',
     descripcion: 'La Echeveria es una suculenta de roseta compacta, ideal para espacios con mucha luz. Requiere riego muy espaciado y es perfecta para quienes buscan plantas de bajo mantenimiento.',
     imagen: '/img/echeveria.jpg',
   },
   {
     codigo: 'MC-001', nombre: 'Maceta Cerámica Blanca', categoria: 'macetas',
     precio: 9990, stock: 25, stockCritico: 5,
+    descripcionCorta: 'Maceta de cerámica con plato incluido, 20 cm de diámetro.',
     descripcion: 'Maceta de cerámica esmaltada color blanco, con orificio de drenaje y plato incluido. Diámetro de 20 cm, ideal para plantas de interior medianas.',
     imagen: '/img/maceta-blanca.jpg',
   },
   {
     codigo: 'SU-001', nombre: 'Sustrato Universal 5L', categoria: 'sustratos',
     precio: 5990, stock: 40, stockCritico: 10,
+    descripcionCorta: 'Mezcla de tierra apta para la mayoría de las plantas de interior.',
     descripcion: 'Sustrato universal balanceado, apto para el trasplante de la mayoría de las plantas de interior y exterior. Presentación de 5 litros.',
     imagen: '/img/sustrato.jpg',
   },
   {
     codigo: 'HT-001', nombre: 'Set de Herramientas de Jardín', categoria: 'herramientas',
     precio: 12990, stock: 10, stockCritico: 2,
+    descripcionCorta: 'Set de 3 piezas: pala, rastrillo y tijera de podar.',
     descripcion: 'Set de herramientas básicas de jardinería en acero inoxidable con mango ergonómico: pala de trasplante, rastrillo de mano y tijera de podar.',
     imagen: '/img/herramientas.jpg',
   },
@@ -84,10 +92,12 @@ async function sembrar() {
     for (const p of productos) {
       await client.query(
         `INSERT INTO products
-           (codigo, nombre, descripcion, categoria, precio, stock, stock_critico, imagen)
-         VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
-         ON CONFLICT DO NOTHING`,
-        [p.codigo, p.nombre, p.descripcion, p.categoria, p.precio, p.stock, p.stockCritico, p.imagen]
+           (codigo, nombre, descripcion_corta, descripcion, categoria, precio, stock, stock_critico, imagen)
+         VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+         ON CONFLICT (codigo) DO UPDATE
+           SET descripcion_corta = EXCLUDED.descripcion_corta
+           WHERE products.descripcion_corta IS NULL`,
+        [p.codigo, p.nombre, p.descripcionCorta, p.descripcion, p.categoria, p.precio, p.stock, p.stockCritico, p.imagen]
       )
     }
 
