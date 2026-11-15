@@ -33,6 +33,239 @@
           }
         }
       }
+    },
+    "/products/": {
+      "get": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Lista los productos",
+        "description": "Devuelve todos los productos. Se puede filtrar por categoría.",
+        "parameters": [
+          {
+            "name": "categoria",
+            "in": "query",
+            "description": "interior, exterior, macetas, sustratos o herramientas",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Crea un producto",
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Datos del producto",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "codigo": {
+                  "type": "string",
+                  "example": "PL-009"
+                },
+                "nombre": {
+                  "type": "string",
+                  "example": "Helecho Boston"
+                },
+                "categoria": {
+                  "type": "string",
+                  "example": "interior"
+                },
+                "precio": {
+                  "type": "number",
+                  "example": 9990
+                },
+                "stock": {
+                  "type": "number",
+                  "example": 10
+                },
+                "stockCritico": {
+                  "type": "number",
+                  "example": 2
+                },
+                "descripcionCorta": {
+                  "type": "string",
+                  "example": "Helecho de hojas largas, ideal para colgar."
+                },
+                "descripcion": {
+                  "type": "string",
+                  "example": "Prefiere ambientes húmedos y luz indirecta."
+                },
+                "imagen": {
+                  "type": "string",
+                  "example": "/img/logo.png"
+                }
+              },
+              "required": [
+                "codigo",
+                "nombre",
+                "categoria",
+                "precio",
+                "stock"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Producto creado"
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "409": {
+            "description": "El código ya existe"
+          }
+        }
+      }
+    },
+    "/products/{id}": {
+      "get": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Obtiene un producto por id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Producto no encontrado"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Actualiza un producto",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Datos del producto",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "codigo": {
+                  "type": "string",
+                  "example": "PL-009"
+                },
+                "nombre": {
+                  "type": "string",
+                  "example": "Helecho Boston"
+                },
+                "categoria": {
+                  "type": "string",
+                  "example": "interior"
+                },
+                "precio": {
+                  "type": "number",
+                  "example": 9990
+                },
+                "stock": {
+                  "type": "number",
+                  "example": 10
+                },
+                "stockCritico": {
+                  "type": "number",
+                  "example": 2
+                },
+                "descripcionCorta": {
+                  "type": "string",
+                  "example": "Helecho de hojas largas, ideal para colgar."
+                },
+                "descripcion": {
+                  "type": "string",
+                  "example": "Prefiere ambientes húmedos y luz indirecta."
+                },
+                "imagen": {
+                  "type": "string",
+                  "example": "/img/logo.png"
+                }
+              },
+              "required": [
+                "codigo",
+                "nombre",
+                "categoria",
+                "precio",
+                "stock"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Producto no encontrado"
+          },
+          "409": {
+            "description": "Conflict"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Productos"
+        ],
+        "summary": "Elimina un producto",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Producto no encontrado"
+          }
+        }
+      }
     }
   }
 }
