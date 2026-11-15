@@ -4,6 +4,7 @@ import { readFileSync } from 'fs'
 import swaggerUi from 'swagger-ui-express'
 import { pool } from './db/pool.js'
 import usersRouter from './routes/users.js'
+import productsRouter from './routes/products.js'
 
 const app = express()
 
@@ -11,6 +12,7 @@ app.use(cors({ origin: process.env.CORS_ORIGIN }))
 app.use(express.json())
 
 app.use('/users', usersRouter)
+app.use('/products', productsRouter)
 
 // Documentacion generada por swagger.js
 const swaggerFile = JSON.parse(readFileSync('./swagger-output.json'))
@@ -30,6 +32,15 @@ app.get('/health', async (req, res) => {
 // Ruta no encontrada
 app.use((req, res) => {
   res.status(404).json({ mensaje: 'Ruta no encontrada' })
+})
+
+// Errores no controlados
+app.use((err, req, res, next) => {
+  if (err.type === 'entity.parse.failed') {
+    return res.status(400).json({ mensaje: 'El cuerpo de la petición no es un JSON válido' })
+  }
+  console.error(err.message)
+  res.status(500).json({ mensaje: 'Error interno del servidor' })
 })
 
 export default app
