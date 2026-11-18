@@ -3,7 +3,7 @@ import cors from 'cors'
 import { readFileSync } from 'fs'
 import swaggerUi from 'swagger-ui-express'
 import { pool } from './db/pool.js'
-import usersRouter from './routes/users.js'
+import authRouter from './routes/auth.js'
 import productsRouter from './routes/products.js'
 
 const app = express()
@@ -11,7 +11,7 @@ const app = express()
 app.use(cors({ origin: process.env.CORS_ORIGIN }))
 app.use(express.json())
 
-app.use('/users', usersRouter)
+app.use('/auth', authRouter)
 app.use('/products', productsRouter)
 
 // Documentacion generada por swagger.js
