@@ -10,6 +10,14 @@
   "schemes": [
     "http"
   ],
+  "securityDefinitions": {
+    "bearerAuth": {
+      "type": "apiKey",
+      "in": "header",
+      "name": "Authorization",
+      "description": "Escribe: Bearer <token> (el token se obtiene en /auth/login)"
+    }
+  },
   "paths": {
     "/health": {
       "get": {
@@ -24,14 +32,157 @@
         }
       }
     },
-    "/users/": {
+    "/auth/register": {
+      "post": {
+        "tags": [
+          "Autenticación"
+        ],
+        "summary": "Registra un cliente nuevo",
+        "description": "Crea un usuario de tipo Cliente y devuelve un token JWT (el usuario inicia sesión automáticamente).",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Datos del registro",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "run": {
+                  "type": "string",
+                  "example": "191102207"
+                },
+                "nombre": {
+                  "type": "string",
+                  "example": "Camila"
+                },
+                "apellidos": {
+                  "type": "string",
+                  "example": "Reyes Soto"
+                },
+                "correo": {
+                  "type": "string",
+                  "example": "camila@gmail.com"
+                },
+                "contrasena": {
+                  "type": "string",
+                  "example": "clave123"
+                },
+                "region": {
+                  "type": "string",
+                  "example": "Región Metropolitana de Santiago"
+                },
+                "comuna": {
+                  "type": "string",
+                  "example": "Santiago"
+                },
+                "direccion": {
+                  "type": "string",
+                  "example": "Av. Siempre Viva 123, Santiago"
+                },
+                "fechaNacimiento": {
+                  "type": "string",
+                  "example": "1998-05-20"
+                }
+              },
+              "required": [
+                "run",
+                "nombre",
+                "apellidos",
+                "correo",
+                "contrasena",
+                "region",
+                "comuna",
+                "direccion"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Usuario creado, devuelve token y usuario"
+          },
+          "400": {
+            "description": "Datos inválidos"
+          },
+          "409": {
+            "description": "El correo o el RUN ya están registrados"
+          }
+        }
+      }
+    },
+    "/auth/login": {
+      "post": {
+        "tags": [
+          "Autenticación"
+        ],
+        "summary": "Inicia sesión",
+        "description": "Valida las credenciales y devuelve un token JWT. Úsalo en el botón Authorize como: Bearer <token>",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Credenciales",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "correo": {
+                  "type": "string",
+                  "example": "marcelo.caceres@profesor.duoc.cl"
+                },
+                "contrasena": {
+                  "type": "string",
+                  "example": "admin"
+                }
+              },
+              "required": [
+                "correo",
+                "contrasena"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Devuelve token y usuario"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Credenciales incorrectas"
+          }
+        }
+      }
+    },
+    "/auth/me": {
       "get": {
+        "tags": [
+          "Autenticación"
+        ],
+        "summary": "Datos del usuario con sesión iniciada",
         "description": "",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "401": {
+            "description": "Token ausente, inválido o expirado"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/products/": {
@@ -40,7 +191,7 @@
           "Productos"
         ],
         "summary": "Lista los productos",
-        "description": "Devuelve todos los productos. Se puede filtrar por categoría.",
+        "description": "Devuelve todos los productos. Se puede filtrar por categoría. Es pública.",
         "parameters": [
           {
             "name": "categoria",
@@ -60,8 +211,13 @@
           "Productos"
         ],
         "summary": "Crea un producto",
-        "description": "",
+        "description": "Solo para administradores.",
         "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          },
           {
             "name": "body",
             "in": "body",
@@ -124,10 +280,21 @@
           "400": {
             "description": "Datos inválidos"
           },
+          "401": {
+            "description": "Token ausente, inválido o expirado"
+          },
+          "403": {
+            "description": "El usuario no es administrador"
+          },
           "409": {
             "description": "El código ya existe"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     },
     "/products/{id}": {
@@ -136,7 +303,7 @@
           "Productos"
         ],
         "summary": "Obtiene un producto por id",
-        "description": "",
+        "description": "Es pública.",
         "parameters": [
           {
             "name": "id",
@@ -162,12 +329,17 @@
           "Productos"
         ],
         "summary": "Actualiza un producto",
-        "description": "",
+        "description": "Solo para administradores.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           },
           {
@@ -232,25 +404,41 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Token ausente, inválido o expirado"
+          },
+          "403": {
+            "description": "El usuario no es administrador"
+          },
           "404": {
             "description": "Producto no encontrado"
           },
           "409": {
             "description": "Conflict"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       },
       "delete": {
         "tags": [
           "Productos"
         ],
         "summary": "Elimina un producto",
-        "description": "",
+        "description": "Solo para administradores.",
         "parameters": [
           {
             "name": "id",
             "in": "path",
             "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
             "type": "string"
           }
         ],
@@ -261,10 +449,21 @@
           "400": {
             "description": "Bad Request"
           },
+          "401": {
+            "description": "Token ausente, inválido o expirado"
+          },
+          "403": {
+            "description": "El usuario no es administrador"
+          },
           "404": {
             "description": "Producto no encontrado"
           }
-        }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
       }
     }
   }
