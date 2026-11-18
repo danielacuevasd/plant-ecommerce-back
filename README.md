@@ -33,8 +33,8 @@ La API queda en `http://localhost:3000` y la documentación en `http://localhost
 |---|---|
 | CRUD de productos | Listo |
 | Documentación Swagger | Listo (`/api-docs`) |
-| Registro e inicio de sesión | Pendiente |
-| Protección de rutas con JWT y roles | Pendiente |
+| Registro e inicio de sesión | Listo |
+| Protección de rutas con JWT y roles | Listo |
 | Flujo de contacto | Pendiente |
 
 ## Endpoints de productos
