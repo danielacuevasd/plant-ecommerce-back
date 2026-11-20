@@ -5,6 +5,7 @@ import swaggerUi from 'swagger-ui-express'
 import { pool } from './db/pool.js'
 import authRouter from './routes/auth.js'
 import productsRouter from './routes/products.js'
+import contactRouter from './routes/contact.js'
 
 const app = express()
 
@@ -13,6 +14,7 @@ app.use(express.json())
 
 app.use('/auth', authRouter)
 app.use('/products', productsRouter)
+app.use('/contact', contactRouter)
 
 // Documentacion generada por swagger.js
 const swaggerFile = JSON.parse(readFileSync('./swagger-output.json'))
