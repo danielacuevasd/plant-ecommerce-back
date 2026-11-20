@@ -465,6 +465,127 @@
           }
         ]
       }
+    },
+    "/contact/": {
+      "post": {
+        "tags": [
+          "Contacto"
+        ],
+        "summary": "Envía un mensaje de contacto",
+        "description": "Es pública: cualquier visitante puede enviar un mensaje.",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Datos del mensaje",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "nombre": {
+                  "type": "string",
+                  "example": "Camila Reyes"
+                },
+                "correo": {
+                  "type": "string",
+                  "example": "camila@gmail.com"
+                },
+                "comentario": {
+                  "type": "string",
+                  "example": "Hola, quisiera saber si tienen Monstera en stock."
+                }
+              },
+              "required": [
+                "nombre",
+                "correo",
+                "comentario"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Mensaje recibido"
+          },
+          "400": {
+            "description": "Datos inválidos"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "Contacto"
+        ],
+        "summary": "Lista los mensajes de contacto",
+        "description": "Solo para administradores. Los más recientes primero.",
+        "parameters": [
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Token ausente, inválido o expirado"
+          },
+          "403": {
+            "description": "El usuario no es administrador"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
+    },
+    "/contact/{id}": {
+      "get": {
+        "tags": [
+          "Contacto"
+        ],
+        "summary": "Obtiene un mensaje de contacto por id",
+        "description": "Solo para administradores.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "authorization",
+            "in": "header",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Token ausente, inválido o expirado"
+          },
+          "403": {
+            "description": "El usuario no es administrador"
+          },
+          "404": {
+            "description": "Mensaje no encontrado"
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ]
+      }
     }
   }
 }
