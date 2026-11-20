@@ -35,7 +35,7 @@ La API queda en `http://localhost:3000` y la documentación en `http://localhost
 | Documentación Swagger | Listo (`/api-docs`) |
 | Registro e inicio de sesión | Listo |
 | Protección de rutas con JWT y roles | Listo |
-| Flujo de contacto | Pendiente |
+| Flujo de contacto | Listo |
 
 ## Endpoints de productos
 
